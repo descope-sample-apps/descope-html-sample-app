@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<head>
+    <script>
+        const queryString = window.location.search;
+        const params = new URLSearchParams(queryString)
+        const userId = params.get("userId")
+        console.log(JSON.stringify(userId))
+        const sessionJwt = params.get("sessionJwt")
+        console.log(JSON.stringify(sessionJwt))
+    </script>
+    <style>
+        .borderexample {
+            border-width:3px;
+            border-style:solid;
+            border-color:black;
+            max-width: 500px;
+            min-width: 100px;
+            word-wrap:break-word;
+        }
+    </style>
+</head>
+<html>
+    <body>
+        <h1>Successfully logged in</h1>
+        <br>
+        <h2> Welcome <script>
+            document.write(userId)
+          </script>
+        </h2>
+        
+        <h3> Your sessionJwt is:
+        <script>
+                document.write(`<p class="borderexample">`)
+                document.write(sessionJwt)
+                document.write("</p>")
+        </script>
+        </h3>
+        <br>
+        <br>
+        <button onclick="location.href = './index.html';" id="home" class="float-left submit-button" >Home</button>
+
+    </body>
+</html>

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<head>
+  <script src="https://unpkg.com/@descope/web-component@latest/dist/index.js"></script>
+</head>
+<html>
+    <body>
+        <h1>Log In With Descope Flows</h1>
+
+        <descope-wc project-id="P2IBjb4s39ubA2tzOW75LfgbGRpR" flow-id="sign-up-or-in"></descope-wc>
+        <br>
+        <br>
+        <br>
+        <br>
+        <button onclick="location.href = './index.html';" id="home" class="float-left submit-button" >Home</button>
+
+        <script>
+            const wcElement = document.getElementsByTagName('descope-wc')[0];
+
+            const onSuccess = (e) => {
+                console.log(e.detail.user),
+                window.location.replace("./loggedIn.html?userId=" + encodeURIComponent(e.detail.user.loginIds) + "&sessionJwt=" + e.detail.sessionJwt)
+            };
+            const onError = (err) => console.log(err);
+
+            wcElement.addEventListener('success', onSuccess);
+            wcElement.addEventListener('error', onError);
+        </script>
+    </body>
+</html>

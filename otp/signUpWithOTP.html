@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<head>
+    <script src="https://unpkg.com/@descope/web-js-sdk@latest/dist/index.umd.js"></script>
+</head>
+<html>
+    <body>
+
+        <h1>Log In With OTP via client SDK</h1>
+
+        <body>
+            <form >
+                <br>
+               Name: <input type = "text" name = "name" id="name"/>
+               <br>
+               Email: <input type = "text" name = "email" id="email"/>
+               <br>
+               Phone: <input type = "text" name = "phone" id="phone"/>
+               <br>
+            </form>
+         </body>
+
+        <button onclick="otpSignUp('email')">Sign Up via email OTP</button>
+
+        <button onclick="otpSignUp('sms')">Sign Up via SMS OTP</button>
+
+        <br>
+        <br>
+        <button onclick="location.href = '../index.html';" id="home" class="float-left submit-button" >Home</button>
+
+        <script>
+            let sdk = Descope({projectId: "P2IBjb4s39ubA2tzOW75LfgbGRpR"});
+            
+            async function otpSignUp(method) {
+                // Args:
+                //    user: Optional user object to populate new user information.
+                const user = { "name": document.getElementById("name").value, "phone": document.getElementById("phone").value, "email": document.getElementById("email").value}
+                //    loginId: email or phone - becomes the loginId for the user from here on and also used for delivery
+                const loginId = document.getElementById("email").value
+                //    deliveryMethod: Delivery method to use to send OTP. Supported values include "email" or "sms"
+                const deliveryMethod = method
+
+                const resp = await sdk.otp.signUp[deliveryMethod](loginId, user);
+                if (!resp.ok) {
+                    window.alert("Failed to initialize signup flow\nStatus Code: " + resp.code 
+                        + "\nError Code: " + resp.error.errorCode + "\nError Description: " + resp.error.errorDescription+ "\nError Message: " + resp.error.message)
+                }
+                else {
+                    console.log("Successfully initialized signup flow")
+                    window.location.replace("./otpVerify?userId=" + encodeURIComponent(loginId) + "&deliveryMethod=" + deliveryMethod)
+                }
+            }
+        </script>
+
+    </body>
+</html>

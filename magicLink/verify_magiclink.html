@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<head>
+    <script src="https://unpkg.com/@descope/web-js-sdk@latest/dist/index.umd.js"></script>
+    <script>
+        const queryString = window.location.search;
+        const params = new URLSearchParams(queryString)
+        const tokenFromURL = params.get("t")
+        console.log(tokenFromURL)
+        let sdk = Descope({projectId: "P2IBjb4s39ubA2tzOW75LfgbGRpR"});
+
+        magicLinkVerify(tokenFromURL)
+            
+        async function magicLinkVerify(thisToken) {
+            console.log("here3")
+            // Args:
+            //  token:  URL parameter containing the magic link token for example, http://auth.company.com/api/verify_magiclink?t=token.
+            const token = thisToken
+
+            const resp = await sdk.magicLink.verify(token);
+            if (!resp.ok) {
+                window.alert("Failed to verify Magic Link Token\nStatus Code: " + resp.code 
+                    + "\nError Code: " + resp.error.errorCode + "\nError Description: " + resp.error.errorDescription+ "\nError Message: " + resp.error.message)
+            }
+            else {
+                console.log("Successfully verified OTP Magic Link Token")
+                console.log(resp.data.user.loginId)
+                window.location.replace("../loggedIn.html?userId=" + encodeURIComponent(resp.data.user.loginIds) + "&sessionJwt=" + resp.data.sessionJwt)
+            }
+        }
+
+    </script>
+</head>
+<html>
+    <body>
+
+        <h1>Verifying your magic link token</h1>
+
+        <br>
+        <br>
+        <button onclick="location.href = '../index.html';" id="home" class="float-left submit-button" >Home</button>
+
+    </body>
+</html>

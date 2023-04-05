@@ -30,7 +30,7 @@
         <button onclick="location.href = '../index.html';" id="home" class="float-left submit-button" >Home</button>
 
         <script>
-            let sdk = Descope({projectId: "P2IBjb4s39ubA2tzOW75LfgbGRpR"});
+            let sdk = Descope({projectId: "P2IBjb4s39ubA2tzOW75LfgbGRpR", persistTokens: true, autoRefresh: true});
             
             
             async function otpVerify() {

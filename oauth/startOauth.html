@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<head>
+    <script src="https://unpkg.com/@descope/web-js-sdk@latest/dist/index.umd.js"></script>
+</head>
+<html>
+    <body>
+
+        <h1>Sign In With OAuth</h1>
+
+
+        <button onclick="startOauth('facebook')">Use Facebook as OAuth provider</button>
+        <br>
+        <br>
+        <button onclick="startOauth('google')">Use Google as OAuth provider</button>
+
+        <br>
+        <br>
+        <button onclick="location.href = '../index.html';" id="home" class="float-left submit-button" >Home</button>
+
+        <script>
+            let sdk = Descope({projectId: "P2IBjb4s39ubA2tzOW75LfgbGRpR"});
+            
+            async function startOauth(myProvider) {
+                // Args:
+                //   provider: social identity provider for authenticating the user. Supported values include "facebook", "github", "google", "microsoft", "gitlab" and "apple". The current list can be found at https://github.com/descope/core-js-sdk/blob/main/src/sdk/oauth/types.ts in the OAuthProviders array.
+                const provider = myProvider
+                //   redirect_url: URL to return to after successful authentication with the social identity provider. You need to implement this page to access the token and finish oauth process (token exchange). The token arrives as a query parameter named 'code'.
+                const redirect_url = "http://127.0.0.1:8080/oauth/finishOauth"
+                
+                const resp = await sdk.oauth.start[provider](redirect_url);
+                if (!resp.ok) {
+                    window.alert("Failed to start OAuth\nStatus Code: " + resp.code 
+                        + "\nError Code: " + resp.error.errorCode + "\nError Description: " + resp.error.errorDescription+ "\nError Message: " + resp.error.message)
+                }
+                else {
+                    console.log("Successfully Started OAuth flow")
+                    window.location.replace(resp.data.url)
+                }
+            }
+        </script>
+
+    </body>
+</html>

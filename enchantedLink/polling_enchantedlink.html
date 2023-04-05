@@ -14,7 +14,6 @@
         enchantedLinkVerify(pendingRef, userId)
             
         async function enchantedLinkVerify(thisPendingRef, myUserId) {
-            console.log("here3")
             // Args:
             //  token:  URL parameter containing the enchanted link token for example, http://auth.company.com/api/verify_enchantedlink?t=token.
             const pendingRef = thisPendingRef
@@ -30,7 +29,6 @@
                 window.location.replace("../loggedIn.html?userId=" + encodeURIComponent(myUserId) + "&sessionJwt=" + resp.data.sessionJwt)
             }
         }
-
     </script>
 </head>
 <html>

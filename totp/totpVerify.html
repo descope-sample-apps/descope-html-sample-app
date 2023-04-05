@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<head>
+    <script src="https://unpkg.com/@descope/web-js-sdk@latest/dist/index.umd.js"></script>
+    <script>
+        const queryString = window.location.search;
+        const params = new URLSearchParams(queryString)
+        const userLoginId = params.get("loginId")
+    </script>
+</head>
+<html>
+    <body>
+        <h1>Verify TOTP via client SDK</h1>
+
+        <body>
+            <form >
+                <br>
+               TOTP Code: <input type = "text" name = "totpCode" id="totpCode"/>
+               <br>
+            </form>
+         </body>
+
+        <button onclick="totpVerify(userLoginId)">Verify TOTP</button>
+
+        <br>
+        <br>
+        <button onclick="location.href = '../index.html';" id="home" class="float-left submit-button" >Home</button>
+
+        <script>
+            let sdk = Descope({projectId: "P2IBjb4s39ubA2tzOW75LfgbGRpR", persistTokens: true, autoRefresh: true});
+            
+            
+            async function totpVerify(thisLoginId) {
+                // Args:
+                //   loginId (str): The loginId of the user being validated
+                const loginId = thisLoginId
+                //   code (str): The authorization code enter by the end user during signup/signin
+                const code = document.getElementById("totpCode").value
+
+                const resp = await sdk.totp.verify(loginId, code);
+                if (!resp.ok) {
+                    window.alert("Failed to verify TOTP code\nStatus Code: " + resp.code 
+                        + "\nError Code: " + resp.error.errorCode + "\nError Description: " + resp.error.errorDescription+ "\nError Message: " + resp.error.message)
+                }
+                else {
+                    console.log("Successfully verified TOTP ")
+                    console.log(resp.data.sessionJwt)
+                    window.location.replace("../loggedIn.html?userId=" + encodeURIComponent(loginId) + "&sessionJwt=" + resp.data.sessionJwt)
+                }
+            }
+        </script>
+
+    </body>
+</html>

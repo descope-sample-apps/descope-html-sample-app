@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<head>
+    <script src="https://unpkg.com/@descope/web-js-sdk@latest/dist/index.umd.js"></script>
+    <script>
+        const queryString = window.location.search;
+        const params = new URLSearchParams(queryString)
+        const userId = params.get("userId")
+        const pendingRef = params.get("pendingRef")
+        const linkId = params.get("linkId")
+
+        
+        let sdk = Descope({projectId: "P2IBjb4s39ubA2tzOW75LfgbGRpR"});
+
+        enchantedLinkVerify(pendingRef, userId)
+            
+        async function enchantedLinkVerify(thisPendingRef, myUserId) {
+            console.log("here3")
+            // Args:
+            //  token:  URL parameter containing the enchanted link token for example, http://auth.company.com/api/verify_enchantedlink?t=token.
+            const pendingRef = thisPendingRef
+
+            const resp = await sdk.enchantedLink.waitForSession(pendingRef);
+            if (!resp.ok) {
+                window.alert("Failed to verify Enchanted Link Token\nStatus Code: " + resp.code 
+                    + "\nError Code: " + resp.error.errorCode + "\nError Description: " + resp.error.errorDescription+ "\nError Message: " + resp.error.message)
+            }
+            else {
+                console.log("Successfully verified OTP enchanted Link Token")
+                console.log(resp.data.user.loginId)
+                window.location.replace("../loggedIn.html?userId=" + encodeURIComponent(myUserId) + "&sessionJwt=" + resp.data.sessionJwt)
+            }
+        }
+
+    </script>
+</head>
+<html>
+    <body>
+        <h1> Polling for your session. Witin your email, click Link ID: <script>
+            document.write(linkId)
+          </script>
+        </h1>
+
+        <br>
+        <br>
+        <button onclick="location.href = '../index.html';" id="home" class="float-left submit-button" >Home</button>
+
+    </body>
+</html>

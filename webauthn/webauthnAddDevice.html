@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<head>
+    <script src="https://unpkg.com/@descope/web-js-sdk@latest/dist/index.umd.js"></script>
+</head>
+<html>
+    <body>
+
+        <h1>Add Device With Biometrics (Webauthn) via client SDK</h1>
+
+        <body>
+            <form >
+                <br>
+               Login ID: <input type = "text" name = "loginId" id="loginId"/>
+                <br>
+                Current Refresh Token: <input type = "text" name = "refreshToken" id="refreshToken"/>
+                <br>
+            </form>
+         </body>
+
+        <button onclick="webauthnAddDevice()">Add Device via Biometrics (Webauthn)</button>
+
+        <br>
+        <br>
+        <button onclick="location.href = '../index.html';" id="home" class="float-left submit-button" >Home</button>
+
+        <script>
+            let sdk = Descope({projectId: "P2IBjb4s39ubA2tzOW75LfgbGRpR"});
+            
+            async function webauthnAddDevice() {
+                // Args:
+                //    loginId: email or phone - becomes the externalID for the user from here on and also used for delivery
+                const loginId = document.getElementById("loginId").value
+                //     token: a refresh token for the user you are wanting to add a device for
+                const token = document.getElementById("refreshToken").value
+
+                const resp = await sdk.webauthn.update(loginId, token);
+                if (!resp.ok) {
+                    window.alert("Failed to add device via Biometrics (Webauthn) \nStatus Code: " + resp.code 
+                        + "\nError Code: " + resp.error.errorCode + "\nError Description: " + resp.error.errorDescription+ "\nError Message: " + resp.error.message)
+                }
+                else {
+                    console.log("Successfully added device via Biometrics (Webauthn) ")
+                    window.alert("Successfully added device via Biometrics (Webauthn), please login via biometrics from the loaded screen after closing this aler.")
+                    window.location.replace("./signInWithWebauthn")
+                }
+            }
+        </script>
+    </body>
+</html>

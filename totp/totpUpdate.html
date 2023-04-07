@@ -37,7 +37,7 @@
                 const resp = await sdk.totp.update(loginId, refresh_token)
                 if (!resp.ok) {
                     window.alert("Failed to initialize TOTP update\nStatus Code: " + resp.code 
-                        + "\nError Code: " + resp.error.errorCode + "\nError Description: " + resp.error.errorDescription+ "\nError Message: " + resp.error.message)
+                        + "\nError Code: " + resp.error.errorCode + "\nError Description: " + resp.error.errorDescription + "\nError Message: " + resp.error.message)
                 }
                 else {
                     console.log("Successfully initialized TOTP update")

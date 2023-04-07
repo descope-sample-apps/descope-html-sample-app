@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<head>
+    <script src="https://unpkg.com/@descope/web-js-sdk@latest/dist/index.umd.js"></script>
+</head>
+<html>
+    <body>
+
+        <h1>Sign In With Single Sign On (SSO)</h1>
+        <br>
+        Email: <input type = "text" name = "email" id="email"/>
+        <br>
+
+
+        <button onclick="startSSO()">Sign In With Single Sign On (SSO)</button>
+
+        <br>
+        <br>
+        <button onclick="location.href = '../index.html';" id="home" class="float-left submit-button" >Home</button>
+
+        <script>
+            let sdk = Descope({projectId: "P2Nc0lrb4EFn9CHssmFN2JgAsezb"});
+            
+            async function startSSO() {
+                // Args:
+                //   tenant_name_id_or_email: ID of the tenant that the user is authenticating to. The tenant ID is assigned to tenant at the time of creation.
+                const tenant_name_id_or_email = document.getElementById("email").value
+                //   redirect_url: URL to return to after successful authentication with the SAML identity provider. You need to implement this page to access the token and finish oauth process (token exchange). The token arrives as a query parameter named 'code'.
+                const redirect_url = "http://localhost:8080/sso/finishSSO"
+                
+                const resp = await sdk.saml.start(tenant_name_id_or_email, redirect_url);
+                if (!resp.ok) {
+                    window.alert("Failed to start SSO\nStatus Code: " + resp.code 
+                        + "\nError Code: " + resp.error.errorCode + "\nError Description: " + resp.error.errorDescription + "\nError Message: " + resp.error.message)
+                }
+                else {
+                    console.log("Successfully Started SSO flow")
+                    window.location.replace(resp.data.url)
+                }
+            }
+        </script>
+
+    </body>
+</html>

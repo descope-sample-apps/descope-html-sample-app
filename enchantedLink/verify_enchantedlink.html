@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <head>
     <script src="https://unpkg.com/@descope/web-js-sdk@latest/dist/index.umd.js"></script>
+    <script type="text/javascript" src="../javascriptVars.js"></script>
     <script>
         const queryString = window.location.search;
         const params = new URLSearchParams(queryString)
         const tokenFromURL = params.get("t")
         console.log(tokenFromURL)
         
-        let sdk = Descope({projectId: "P2IBjb4s39ubA2tzOW75LfgbGRpR"});
+        let sdk = Descope({projectId: projectId});
 
         enchantedLinkVerify(tokenFromURL)
             

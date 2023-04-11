@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <head>
     <script src="https://unpkg.com/@descope/web-js-sdk@latest/dist/index.umd.js"></script>
+    <script type="text/javascript" src="../javascriptVars.js"></script>
 </head>
 <html>
     <body>
@@ -24,14 +25,14 @@
         <button onclick="location.href = '../index.html';" id="home" class="float-left submit-button" >Home</button>
 
         <script>
-            let sdk = Descope({projectId: "P2IBjb4s39ubA2tzOW75LfgbGRpR"});
+            let sdk = Descope({projectId: projectId});
             
             async function magicLinkSignIn(method) {
                 // Args:
                 //    loginId: email or phone for the user
                 const loginId = document.getElementById("loginId").value
                 //    uri: (Optional) this is the link that user is sent (code appended) for verification. Your application needs to host this page and extract the token for verification. The token arrives as a query parameter named 't'
-                const uri = "http://127.0.0.1:8080/magicLink/verify_magiclink"
+                const uri = "http://localhost:8080/magicLink/verify_magiclink"
                 //    deliveryMethod: Delivery method to use to send OTP. Supported values include "email" or "sms"
                 const deliveryMethod = method
 

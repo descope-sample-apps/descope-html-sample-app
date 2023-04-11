@@ -1,29 +1,59 @@
 <!DOCTYPE html>
 <head>
   <script src="https://unpkg.com/@descope/web-component@latest/dist/index.js"></script>
+  <script src="https://unpkg.com/@descope/web-js-sdk@latest/dist/index.umd.js"></script>
+  <script type="text/javascript" src="javascriptVars.js">
+    document.getElementById('thisProjectId').setAttribute(projectId)
+  </script>
 </head>
 <html>
     <body>
         <h1>Log In With Descope Flows</h1>
+        <p id="container"></p>
 
-        <descope-wc project-id="P2IBjb4s39ubA2tzOW75LfgbGRpR" flow-id="sign-up-or-in"></descope-wc>
         <br>
-        <br>
-        <br>
-        <br>
+        
         <button onclick="location.href = './index.html';" id="home" class="float-left submit-button" >Home</button>
-
+        
         <script>
-            const wcElement = document.getElementsByTagName('descope-wc')[0];
+            const sdk = Descope({ projectId: projectId, persistTokens: true, autoRefresh: true });
+            
+            const sessionToken = sdk.getSessionToken()
+            if (sessionToken) {
+              const notValidToken = sdk.isJwtExpired(sessionToken)
+              
+              if (!notValidToken) {
+                // user logged in
+              } else {
+                console.log("Here 1")
+                 // user session expired 
+                var container = document.getElementById('container');
+                container.innerHTML = '<descope-wc project-id="' + projectId+ '" flow-id="sign-up-or-in"></descope-wc>';
+                const wcElement = document.getElementsByTagName('descope-wc')[0];
+                const onSuccess = (e) => {
+                    console.log(e.detail.user),
+                    window.location.replace("./loggedIn.html?userId=" + encodeURIComponent(e.detail.user.loginIds) + "&sessionJwt=" + e.detail.sessionJwt)
+                };
+                const onError = (err) => console.log(err);
 
-            const onSuccess = (e) => {
-                console.log(e.detail.user),
-                window.location.replace("./loggedIn.html?userId=" + encodeURIComponent(e.detail.user.loginIds) + "&sessionJwt=" + e.detail.sessionJwt)
-            };
-            const onError = (err) => console.log(err);
+                wcElement.addEventListener('success', onSuccess);
+                wcElement.addEventListener('error', onError);
+              }
+            } else {
+                console.log("Here 2")
+                // user un authnticated 
+                var container = document.getElementById('container');
+                container.innerHTML = '<descope-wc project-id="' + projectId+ '" flow-id="sign-up-or-in"></descope-wc>';
+                const wcElement = document.getElementsByTagName('descope-wc')[0];
+                const onSuccess = (e) => {
+                    console.log(e.detail.user),
+                    window.location.replace("./loggedIn.html?userId=" + encodeURIComponent(e.detail.user.loginIds) + "&sessionJwt=" + e.detail.sessionJwt)
+                };
+                const onError = (err) => console.log(err);
 
-            wcElement.addEventListener('success', onSuccess);
-            wcElement.addEventListener('error', onError);
+                wcElement.addEventListener('success', onSuccess);
+                wcElement.addEventListener('error', onError);
+            }
         </script>
     </body>
 </html>

@@ -19,29 +19,8 @@
             const sdk = Descope({ projectId: projectId, persistTokens: true, autoRefresh: true });
             
             const sessionToken = sdk.getSessionToken()
-            if (sessionToken) {
-              const notValidToken = sdk.isJwtExpired(sessionToken)
-              
-              if (!notValidToken) {
-                // user logged in
-              } else {
-                console.log("Here 1")
-                 // user session expired 
-                var container = document.getElementById('container');
-                container.innerHTML = '<descope-wc project-id="' + projectId+ '" flow-id="sign-up-or-in"></descope-wc>';
-                const wcElement = document.getElementsByTagName('descope-wc')[0];
-                const onSuccess = (e) => {
-                    console.log(e.detail.user),
-                    window.location.replace("./loggedIn.html?userId=" + encodeURIComponent(e.detail.user.loginIds) + "&sessionJwt=" + e.detail.sessionJwt)
-                };
-                const onError = (err) => console.log(err);
-
-                wcElement.addEventListener('success', onSuccess);
-                wcElement.addEventListener('error', onError);
-              }
-            } else {
-                console.log("Here 2")
-                // user un authnticated 
+            const notValidToken = sdk.isJwtExpired(sessionToken)
+            if (!sessionToken || !notValidToken) {
                 var container = document.getElementById('container');
                 container.innerHTML = '<descope-wc project-id="' + projectId+ '" flow-id="sign-up-or-in"></descope-wc>';
                 const wcElement = document.getElementsByTagName('descope-wc')[0];

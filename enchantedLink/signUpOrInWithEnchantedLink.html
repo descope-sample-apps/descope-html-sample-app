@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<head>
+    <script src="https://unpkg.com/@descope/web-js-sdk@latest/dist/index.umd.js"></script>
+    <script type="text/javascript" src="../javascriptVars.js"></script>
+</head>
+<html>
+    <body>
+
+        <h1>Sign Up or In with Enchanted Link via client SDK</h1>
+
+        <body>
+            <form >
+                <br>
+               Email: <input type = "text" name = "email" id="email"/>
+               <br>
+            </form>
+         </body>
+
+        <button onclick="enchantedLinkSignUpOrIn()">Sign Up or In via Enchanted Link</button>
+
+        <br>
+        <br>
+        <button onclick="location.href = '../index.html';" id="home" class="float-left submit-button" >Home</button>
+
+        <script>
+            let sdk = Descope({projectId: projectId});
+            
+            async function enchantedLinkSignUpOrIn() {
+                // Args:
+                //    loginId: email or phone - becomes the loginId for the user from here on and also used for delivery
+                const loginId = document.getElementById("email").value
+                //    uri: (Optional) this is the link that user is sent (code appended) for verification. Your application needs to host this page and extract the token for verification. The token arrives as a query parameter named 't'
+                const uri = "http://localhost:8080/enchantedLink/verify_enchantedlink"
+
+                const resp = await sdk.enchantedLink.signUpOrIn(loginId, uri);
+                if (!resp.ok) {
+                    window.alert("Failed to initialize signup or in flow\nStatus Code: " + resp.code 
+                        + "\nError Code: " + resp.error.errorCode + "\nError Description: " + resp.error.errorDescription + "\nError Message: " + resp.error.message)
+                }
+                else {
+                    console.log("Successfully initialized signup or in flow")
+                    window.location.replace("./polling_enchantedlink.html?userId=" + encodeURIComponent(loginId) + "&pendingRef=" + encodeURIComponent(resp.data.pendingRef) + "&linkId=" + encodeURIComponent(resp.data.linkId))
+                }
+            }
+        </script>
+
+    </body>
+</html>

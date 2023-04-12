@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<head>
+    <script src="https://unpkg.com/@descope/web-js-sdk@latest/dist/index.umd.js"></script>
+    <script type="text/javascript" src="../javascriptVars.js"></script>
+    <script>
+        const queryString = window.location.search;
+        const params = new URLSearchParams(queryString)
+        const urlImage = params.get("image")
+        const urlKey = params.get("key")
+        const urlProvisioningURL = params.get("provisioningURL")
+        const userLoginId = params.get("loginId")
+    </script>
+        <style>
+            .borderexample {
+                border-width:3px;
+                border-style:solid;
+                border-color:black;
+                max-width: 700px;
+                min-width: 100px;
+                word-wrap:break-word;
+            }
+        </style>
+</head>
+<html>
+    <body>
+
+        <h1>Here is the details of your TOTP Sign Up</h1>
+        <h3>Please add to your authenticator application, then click verify</h3>
+        <br>
+        <br>
+        <body>
+            <script>
+                document.write(`<p class="borderexample">`)
+                document.write("Your provisioning Key:    " + urlKey)
+                document.write("</p>")
+            </script>
+            <script>
+                document.write(`<p class="borderexample">`)
+                document.write("Your provisioning URL:    " + urlProvisioningURL)
+                document.write("</p>")
+            </script>
+            <script>
+                document.write(`<p class="borderexample">`)
+                document.write("Your provisioning QR Code:<br><br><img src='data:image/png;base64," + urlImage + "'/>")
+                document.write("</p>")
+            </script>
+        </body>
+        <br>
+        <br>
+        <button onclick="window.location.replace('./totpVerify?loginId=' + encodeURIComponent(userLoginId))">Verify TOTP</button>
+        <br>
+        <br>
+        <button onclick="location.href = '../index.html';" id="home" class="float-left submit-button" >Home</button>
+    </body>
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<head>
+    <script src="https://unpkg.com/@descope/web-js-sdk@latest/dist/index.umd.js"></script>
+    <script type="text/javascript" src="../javascriptVars.js"></script>
+</head>
+<html>
+    <body>
+
+        <h1>Sign In With Biometrics (Webauthn) via client SDK</h1>
+
+        <body>
+            <form >
+                <br>
+               Login ID: <input type = "text" name = "loginId" id="loginId"/>
+                <br>
+            </form>
+         </body>
+
+        <button onclick="webauthnSignIn()">Sign In via Biometrics (Webauthn)</button>
+
+        <br>
+        <br>
+        <button onclick="location.href = '../index.html';" id="home" class="float-left submit-button" >Home</button>
+
+        <script>
+            let sdk = Descope({projectId: projectId});
+            
+            async function webauthnSignIn() {
+                // Args:
+                //    loginId: email or phone
+                const loginId = document.getElementById("loginId").value
+
+                const resp = await sdk.webauthn.signIn(loginId);
+                if (!resp.ok) {
+                    window.alert("Failed to login via Biometrics (Webauthn) \nStatus Code: " + resp.code 
+                        + "\nError Code: " + resp.error.errorCode + "\nError Description: " + resp.error.errorDescription + "\nError Message: " + resp.error.message)
+                }
+                else {
+                    console.log("Successfully logged in via Biometrics (Webauthn) ")
+                    window.location.replace("../loggedIn.html?userId=" + encodeURIComponent(loginId) + "&sessionJwt=" + resp.data.sessionJwt)
+                }
+            }
+        </script>
+    </body>
+</html>

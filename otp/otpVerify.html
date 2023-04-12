@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <head>
     <script src="https://unpkg.com/@descope/web-js-sdk@latest/dist/index.umd.js"></script>
+    <script type="text/javascript" src="../javascriptVars.js"></script>
     <script>
         const queryString = window.location.search;
         const params = new URLSearchParams(queryString)
@@ -27,10 +28,10 @@
 
         <br>
         <br>
-        <button onclick="location.href = './index.html';" id="home" class="float-left submit-button" >Home</button>
+        <button onclick="location.href = '../index.html';" id="home" class="float-left submit-button" >Home</button>
 
         <script>
-            let sdk = Descope({projectId: "P2IBjb4s39ubA2tzOW75LfgbGRpR"});
+            let sdk = Descope({projectId: projectId, persistTokens: true, autoRefresh: true});
             
             
             async function otpVerify() {
@@ -45,12 +46,12 @@
                 const resp = await sdk.otp.verify[deliveryMethod](loginId, code);
                 if (!resp.ok) {
                     window.alert("Failed to verify OTP code\nStatus Code: " + resp.code 
-                        + "\nError Code: " + resp.error.errorCode + "\nError Description: " + resp.error.errorDescription+ "\nError Message: " + resp.error.message)
+                        + "\nError Code: " + resp.error.errorCode + "\nError Description: " + resp.error.errorDescription + "\nError Message: " + resp.error.message)
                 }
                 else {
                     console.log("Successfully verified OTP ")
                     console.log(resp.data.sessionJwt)
-                    window.location.replace("./loggedIn.html?userId=" + encodeURIComponent(loginId) + "&sessionJwt=" + resp.data.sessionJwt)
+                    window.location.replace("../loggedIn.html?userId=" + encodeURIComponent(loginId) + "&sessionJwt=" + resp.data.sessionJwt)
                 }
             }
         </script>

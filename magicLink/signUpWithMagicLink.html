@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<head>
+    <script src="https://unpkg.com/@descope/web-js-sdk@latest/dist/index.umd.js"></script>
+    <script type="text/javascript" src="../javascriptVars.js"></script>
+</head>
+<html>
+    <body>
+
+        <h1>Sign Up With Magic Link via client SDK</h1>
+
+        <body>
+            <form >
+                <br>
+               Name: <input type = "text" name = "name" id="name"/>
+               <br>
+               Email: <input type = "text" name = "email" id="email"/>
+               <br>
+               Phone: <input type = "text" name = "phone" id="phone"/>
+               <br>
+            </form>
+         </body>
+
+        <button onclick="magicLinkSignUp('email')">Sign Up via email Magic Link</button>
+
+        <button onclick="magicLinkSignUp('sms')">Sign Up via SMS Magic Link</button>
+
+        <br>
+        <br>
+        <button onclick="location.href = '../index.html';" id="home" class="float-left submit-button" >Home</button>
+
+        <script>
+            let sdk = Descope({projectId: projectId});
+            console.log(sessionStorage.getItem("NODE_ENV"))
+            
+            async function magicLinkSignUp(method) {
+                // Args:
+                //    user: Optional user object to populate new user information.
+                const user = { "name": document.getElementById("name").value, "phone": document.getElementById("phone").value, "email": document.getElementById("email").value}
+                //    loginId: email or phone - becomes the loginId for the user from here on and also used for delivery
+                const loginId = document.getElementById("email").value
+                //    uri: (Optional) this is the link that user is sent (code appended) for verification. Your application needs to host this page and extract the token for verification. The token arrives as a query parameter named 't'
+                const uri = "http://localhost:8080/magicLink/verify_magiclink.html"
+                //    deliveryMethod: Delivery method to use to send OTP. Supported values include "email" or "sms"
+                const deliveryMethod = method
+
+                const resp = await sdk.magicLink.signUp[deliveryMethod](loginId, uri, user);
+                if (!resp.ok) {
+                    window.alert("Failed to initialize signup flow\nStatus Code: " + resp.code 
+                        + "\nError Code: " + resp.error.errorCode + "\nError Description: " + resp.error.errorDescription + "\nError Message: " + resp.error.message)
+                }
+                else {
+                    console.log("Successfully initialized signup flow")
+                    window.alert("Successfully initialized Magic Link Flow, please close this window and go to your email or phone and click the link to log in.")
+                }
+            }
+        </script>
+
+    </body>
+</html>

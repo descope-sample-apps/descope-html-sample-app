@@ -10,6 +10,6 @@ This sample app allows you to get familiar with the Descope SDKs when working wi
 ###  Run the app
 1. Clone this repo
 2. Install http-server via brew or other methods
-3. TODO *** SUPPORT SETTING THE PROJECT ID GLOBALLY ***
+3. Edit `javascriptVars.js` and replace `<your-project-id>` with your project ID.
 4. Within the directory of the repo, run `http-server`
-5. You can then go to `http://127.0.0.1:8080` and utilize the sample app
+5. You can then go to `http://localhost:8080` and utilize the sample app

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<head>
+    <script src="https://unpkg.com/@descope/web-js-sdk@latest/dist/index.umd.js"></script>
+    <script type="text/javascript" src="../javascriptVars.js"></script>
+</head>
+<html>
+    <body>
+        <h1>Update TOTP</h1>
+
+        <body>
+            <form >
+                <br>
+               Login ID: <input type = "text" name = "loginId" id="loginId"/>
+               <br>
+                <br>
+               Current Refresh Token: <input type = "text" name = "refreshToken" id="refreshToken"/>
+               <br>
+            </form>
+         </body>
+
+        <button onclick="updateTOTP()">Update TOTP</button>
+
+        <br>
+        <br>
+        <button onclick="location.href = '../index.html';" id="home" class="float-left submit-button" >Home</button>
+
+        <script>
+            let sdk = Descope({projectId: projectId});
+            
+            
+            async function updateTOTP() {
+                // Args:
+                //    loginId: email, phone or username of the authenticated user
+                const loginId = document.getElementById("loginId").value
+                //    refresh_token: string with the refresh token of the user. This should be extracted from cookies sent with the query.
+                const refresh_token = document.getElementById("refreshToken").value
+
+                const resp = await sdk.totp.update(loginId, refresh_token)
+                if (!resp.ok) {
+                    window.alert("Failed to initialize TOTP update\nStatus Code: " + resp.code 
+                        + "\nError Code: " + resp.error.errorCode + "\nError Description: " + resp.error.errorDescription + "\nError Message: " + resp.error.message)
+                }
+                else {
+                    console.log("Successfully initialized TOTP update")
+                    window.location.replace("./totpDisplay?image=" + encodeURIComponent(resp.data.image) + "&key=" + encodeURIComponent(resp.data.key) + "&provisioningURL=" + encodeURIComponent(resp.data.provisioningURL) + "&loginId=" + encodeURIComponent(loginId))
+                }
+            }
+        </script>
+
+    </body>
+</html>

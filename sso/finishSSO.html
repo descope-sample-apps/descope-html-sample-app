@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<head>
+    <script src="https://unpkg.com/@descope/web-js-sdk@latest/dist/index.umd.js"></script>
+    <script type="text/javascript" src="../javascriptVars.js"></script>
+    <script>
+        const queryString = window.location.search;
+        const params = new URLSearchParams(queryString)
+        const authURLCode = params.get("code")
+        console.log(authURLCode)
+        let sdk = Descope({projectId: projectId});
+
+        ssoFinishExchange(authURLCode)
+            
+        async function ssoFinishExchange(thisCode) {
+            // Args:
+            //   code: code extracted from the url after user is redirected to redirect_url. The code is in the url as a query parameter "code" of the page.
+            const code = thisCode
+
+            const resp = await sdk.saml.exchange(code);
+            if (!resp.ok) {
+                window.alert("Failed to finish SSO\nStatus Code: " + resp.code 
+                    + "\nError Code: " + resp.error.errorCode + "\nError Description: " + resp.error.errorDescription + "\nError Message: " + resp.error.message)
+            }
+            else {
+                console.log("Successfully finished SSO")
+                console.log(resp.data.user.loginId)
+                window.location.replace("../loggedIn.html?userId=" + encodeURIComponent(resp.data.user.loginIds) + "&sessionJwt=" + resp.data.sessionJwt)
+            }
+        }
+    </script>
+</head>
+<html>
+    <body>
+
+        <h1>Verifying SSO Code</h1>
+
+        <br>
+        <br>
+        <button onclick="location.href = '../index.html';" id="home" class="float-left submit-button" >Home</button>
+
+    </body>
+</html>

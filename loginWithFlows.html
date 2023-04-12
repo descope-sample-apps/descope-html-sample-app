@@ -28,7 +28,7 @@
                 const wcElement = document.getElementsByTagName('descope-wc')[0];
                 const onSuccess = (e) => {
                     console.log(e.detail.user),
-                    sdk.refresh()
+                    sdk.refresh(),
                     window.location.replace("./loggedIn.html?userId=" + encodeURIComponent(e.detail.user.loginIds) + "&sessionJwt=" + e.detail.sessionJwt)
                 };
                 const onError = (err) => console.log(err);

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<head>
+	<script src="https://unpkg.com/@descope/web-component@latest/dist/index.js"></script>
+	<script src="https://unpkg.com/@descope/web-js-sdk@latest/dist/index.umd.js"></script>
+</head>
+<html>
+	<body>
+		<h1>Log In With Descope Flows</h1>
+		<p id="container"></p>
+
+		<script>
+			const sdk = Descope({
+				projectId: "P2UUCFChLESaj1iUEnSZfo76QaWe",
+				persistTokens: true,
+				autoRefresh: true,
+			});
+
+			var container = document.getElementById("container");
+			container.innerHTML =
+				'<descope-wc project-id="P2UUCFChLESaj1iUEnSZfo76QaWe" flow-id="sign-up-or-in"></descope-wc>';
+
+			const wcElement = document.getElementsByTagName("descope-wc")[0];
+			const onSuccess = (e) => {
+				console.log(e.detail.user);
+				sdk.refresh();
+				window.location.replace("./");
+			};
+			const onError = (err) => console.log(err);
+
+			wcElement.addEventListener("success", onSuccess);
+			wcElement.addEventListener("error", onError);
+		</script>
+	</body>
+</html>
+
+<script src="https://unpkg.com/@descope/web-js-sdk@x.x.x/dist/index.umd.js"></script>
+<script>
+	sdk.refresh();
+	// Rest of your logic ...
+</script>

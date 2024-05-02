@@ -4,7 +4,7 @@
     <script>
         console.log("here1");
         (async () => {
-            let sdk = Descope({projectId: "P2IBjb4s39ubA2tzOW75LfgbGRpR"});
+            let sdk = Descope({projectId: "<your-project-id>"});
             const user = await sdk.me(localStorage.getItem("DSR"));
             console.log(user.data.name);
         })();

@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <head>
+    <script src="https://unpkg.com/@descope/web-js-sdk@latest/dist/index.umd.js"></script>
     <script>
-        const queryString = window.location.search;
-        const params = new URLSearchParams(queryString)
-        const userId = params.get("userId")
-        console.log(JSON.stringify(userId))
-        const sessionJwt = params.get("sessionJwt")
-        console.log(JSON.stringify(sessionJwt))
+        console.log("here1");
+        (async () => {
+            let sdk = Descope({projectId: "P2IBjb4s39ubA2tzOW75LfgbGRpR"});
+            const user = await sdk.me(localStorage.getItem("DSR"));
+            console.log(user.data.name);
+        })();
     </script>
     <style>
         .borderexample {
@@ -24,14 +25,14 @@
         <h1>Successfully logged in</h1>
         <br>
         <h2> Welcome <script>
-            document.write(userId)
+            document.write(user.data.name)
           </script>
         </h2>
         
         <h3> Your sessionJwt is:
         <script>
                 document.write(`<p class="borderexample">`)
-                document.write(sessionJwt)
+                document.write(localStorage.getItem("DS"))
                 document.write("</p>")
         </script>
         </h3>

@@ -41,7 +41,9 @@
                 }
                 else {
                     console.log("Successfully signed up via Biometrics (Webauthn) ")
-                    window.location.replace("../loggedIn.html?userId=" + encodeURIComponent(loginId) + "&sessionJwt=" + resp.data.sessionJwt)
+                    localStorage.setItem("DS", resp.data.sessionJwt)
+                    localStorage.setItem("DSR", resp.data.refreshJwt)
+                    window.location.replace("../loggedIn.html")
                 }
             }
         </script>

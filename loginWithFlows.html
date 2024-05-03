@@ -19,14 +19,11 @@
             const sdk = Descope({ projectId: projectId, persistTokens: true, autoRefresh: true });
             let notValidToken = true
             const sessionToken = sdk.getSessionToken()
-            console.log("here2")
             if (sessionToken) {
                 notValidToken = sdk.isJwtExpired(sessionToken)
-                console.log("here1")
                 console.log(notValidToken)
             } else {
                 notValidToken = false
-                console.log("here")
             }
             if (!sessionToken || notValidToken) {
                 var container = document.getElementById('container');

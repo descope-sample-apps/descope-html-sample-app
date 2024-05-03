@@ -17,24 +17,30 @@
         
         <script>
             const sdk = Descope({ projectId: projectId, persistTokens: true, autoRefresh: true });
-            
+            let notValidToken = true
             const sessionToken = sdk.getSessionToken()
             if (sessionToken) {
-                const notValidToken = sdk.isJwtExpired(sessionToken)
+                notValidToken = sdk.isJwtExpired(sessionToken)
+                console.log(notValidToken)
+            } else {
+                notValidToken = false
             }
-            if (!sessionToken || !notValidToken) {
+            if (!sessionToken || notValidToken) {
                 var container = document.getElementById('container');
                 container.innerHTML = '<descope-wc project-id="' + projectId+ '" flow-id="sign-up-or-in"></descope-wc>';
                 const wcElement = document.getElementsByTagName('descope-wc')[0];
                 const onSuccess = (e) => {
                     console.log(e.detail.user),
                     sdk.refresh(),
-                    window.location.replace("./loggedIn.html?userId=" + encodeURIComponent(e.detail.user.loginIds) + "&sessionJwt=" + e.detail.sessionJwt)
+                    window.location.replace("./loggedIn.html")
                 };
                 const onError = (err) => console.log(err);
 
                 wcElement.addEventListener('success', onSuccess);
                 wcElement.addEventListener('error', onError);
+            }
+            else if (!notValidToken) {
+                window.location.replace("./loggedIn.html")
             }
         </script>
     </body>

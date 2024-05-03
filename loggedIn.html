@@ -1,13 +1,8 @@
 <!DOCTYPE html>
+<html>
 <head>
-    <script>
-        const queryString = window.location.search;
-        const params = new URLSearchParams(queryString)
-        const userId = params.get("userId")
-        console.log(JSON.stringify(userId))
-        const sessionJwt = params.get("sessionJwt")
-        console.log(JSON.stringify(sessionJwt))
-    </script>
+    <script src="https://unpkg.com/@descope/web-js-sdk@latest/dist/index.umd.js"></script>
+    <script src="javascriptVars.js"></script>
     <style>
         .borderexample {
             border-width:3px;
@@ -19,24 +14,25 @@
         }
     </style>
 </head>
-<html>
-    <body>
-        <h1>Successfully logged in</h1>
-        <br>
-        <h2> Welcome <script>
-            document.write(userId)
-          </script>
-        </h2>
-        
-        <h3> Your sessionJwt is:
-        <script>
-                document.write(`<p class="borderexample">`)
-                document.write(sessionJwt)
-                document.write("</p>")
-        </script>
-        </h3>
-        <br>
-        <br>
-        <button onclick="location.href = './index.html';" id="home" class="float-left submit-button" >Home</button>
-    </body>
+<body>
+    <h1>Successfully logged in</h1>
+    <br>
+    <h2>Welcome <span id="userName">Loading...</span></h2>
+    
+    <h3>Your sessionJwt is:
+        <p class="borderexample" id="sessionJwt"></p>
+    </h3>
+    <br>
+    <button onclick="location.href = './index.html';" id="home" class="float-left submit-button">Home</button>
+
+    <script>
+        (async () => {
+            let sdk = Descope({projectId: projectId});
+            const user = await sdk.me(localStorage.getItem("DSR"));
+            const userId = user.data.name;
+            document.getElementById('userName').textContent = userId;
+            document.getElementById('sessionJwt').textContent = localStorage.getItem("DS");
+        })();
+    </script>
+</body>
 </html>

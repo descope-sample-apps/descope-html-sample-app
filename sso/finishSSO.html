@@ -24,7 +24,9 @@
             else {
                 console.log("Successfully finished SSO")
                 console.log(resp.data.user.loginId)
-                window.location.replace("../loggedIn.html?userId=" + encodeURIComponent(resp.data.user.loginIds) + "&sessionJwt=" + resp.data.sessionJwt)
+                localStorage.setItem("DS", resp.data.sessionJwt)
+                localStorage.setItem("DSR", resp.data.refreshJwt)
+                window.location.replace("../loggedIn.html")
             }
         }
     </script>

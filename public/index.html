@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<head>
+	<script src="https://unpkg.com/@descope/web-component@latest/dist/index.js"></script>
+	<script src="https://unpkg.com/@descope/web-js-sdk@latest/dist/index.umd.js"></script>
+	<script>
+        function logout() {
+            sdk.logout();
+			window.location.replace("./login.html");
+        }
+		const sdk = Descope({
+			projectId: "P2UUCFChLESaj1iUEnSZfo76QaWe",
+			persistTokens: true,
+			autoRefresh: true,
+		});
+
+		const sessionToken = sdk.getSessionToken();
+		var notValidToken;
+		if (sessionToken) {
+			notValidToken = sdk.isJwtExpired(sessionToken);
+		}
+		if (!sessionToken || notValidToken) {
+			window.location.replace("./login.html");
+		}
+	</script>
+</head>
+<html>
+	<body>
+		<h1>Authenticated</h1>
+		<p>some data</p>
+        <button onclick="logout()">Logout</button>
+
+	</body>
+</html>

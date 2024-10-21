@@ -1,5 +1,63 @@
 <!DOCTYPE html>
 <html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Log In With Descope Flows</title>
+        
+        <!-- Load Descope Web Component and SDK -->
+        <script src="https://unpkg.com/@descope/web-component@latest/dist/index.js"></script>
+        <script src="https://unpkg.com/@descope/web-js-sdk@latest/dist/index.umd.js"></script>
+        
+        <!-- Load external JavaScript with variables -->
+        <script src="javascriptVars.js"></script>
+      
+        <script type="text/javascript">
+          // Ensure the Descope project ID is set correctly from javascriptVars.js
+          document.addEventListener("DOMContentLoaded", function () {
+            const projectId = window.projectId;  // Assuming projectId is defined in javascriptVars.js
+      
+            if (!projectId) {
+              console.error("Project ID is not defined!");
+              return;
+            }
+      
+            // Initialize the Descope SDK
+            const sdk = Descope({ projectId: projectId, persistTokens: true, autoRefresh: true });
+      
+            // Function to display Google One Tap
+            async function displayOneTap() {
+              try {
+                  const resp = await sdk.fedcm.oneTap('google');
+                  console.log("One Tap response:", resp);
+                  
+                  // Redirect on successful One Tap response
+                  window.location.replace("./loggedIn.html");
+              } catch (error) {
+                  console.error("Failed to display One Tap:", error);
+              }
+            }
+      
+            // Check session token validity
+            let notValidToken = true;
+            const sessionToken = sdk.getSessionToken();
+            
+            if (sessionToken) {
+              notValidToken = sdk.isJwtExpired(sessionToken);
+              console.log("Token validity:", notValidToken);
+            }
+      
+            // If no session or token is invalid, display Descope flows and one tap
+            if (!sessionToken || notValidToken) {
+              // Show Google One Tap
+              displayOneTap();
+            } else {
+              // If session token is valid, redirect to logged-in page
+              window.location.replace("./loggedIn.html");
+            }
+          });
+        </script>
+      </head>
     <body>
         <h1>Welcome to the Descope HTML Examples</h1>
         <br>

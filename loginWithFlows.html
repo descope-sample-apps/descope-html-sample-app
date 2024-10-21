@@ -1,47 +1,85 @@
 <!DOCTYPE html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Log In With Descope Flows</title>
+  
+  <!-- Load Descope Web Component and SDK -->
   <script src="https://unpkg.com/@descope/web-component@latest/dist/index.js"></script>
   <script src="https://unpkg.com/@descope/web-js-sdk@latest/dist/index.umd.js"></script>
-  <script type="text/javascript" src="javascriptVars.js">
-    document.getElementById('thisProjectId').setAttribute(projectId)
+  
+  <!-- Load external JavaScript with variables -->
+  <script src="javascriptVars.js"></script>
+
+  <script type="text/javascript">
+    // Ensure the Descope project ID is set correctly from javascriptVars.js
+    document.addEventListener("DOMContentLoaded", function () {
+      const projectId = window.projectId;  // Assuming projectId is defined in javascriptVars.js
+
+      if (!projectId) {
+        console.error("Project ID is not defined!");
+        return;
+      }
+
+      // Initialize the Descope SDK
+      const sdk = Descope({ projectId: projectId, persistTokens: true, autoRefresh: true });
+
+      // Function to display Google One Tap
+      async function displayOneTap() {
+        try {
+            const resp = await sdk.fedcm.oneTap('google');
+            console.log("One Tap response:", resp);
+            
+            // Redirect on successful One Tap response
+            window.location.replace("./loggedIn.html");
+        } catch (error) {
+            console.error("Failed to display One Tap:", error);
+        }
+      }
+
+      // Check session token validity
+      let notValidToken = true;
+      const sessionToken = sdk.getSessionToken();
+      
+      if (sessionToken) {
+        notValidToken = sdk.isJwtExpired(sessionToken);
+        console.log("Token validity:", notValidToken);
+      }
+
+      // If no session or token is invalid, display Descope flows and one tap
+      if (!sessionToken || notValidToken) {
+        // Inject Descope Web Component into the container
+        const container = document.getElementById('container');
+        container.innerHTML = `<descope-wc project-id="${projectId}" flow-id="sign-up-or-in"></descope-wc>`;
+
+        // Attach event listeners for success and error
+        const wcElement = document.querySelector('descope-wc');
+        wcElement.addEventListener('success', (e) => {
+          console.log("Login success:", e.detail.user);
+          sdk.refresh();
+          window.location.replace("./loggedIn.html");
+        });
+
+        wcElement.addEventListener('error', (err) => {
+          console.error("Login error:", err);
+        });
+
+        // Show Google One Tap
+        displayOneTap();
+      } else {
+        // If session token is valid, redirect to logged-in page
+        window.location.replace("./loggedIn.html");
+      }
+    });
   </script>
 </head>
-<html>
-    <body>
-        <h1>Log In With Descope Flows</h1>
-        <p id="container"></p>
+<body>
+  <h1>Log In With Descope Flows</h1>
+  <p id="container"></p>
 
-        <br>
-        
-        <button onclick="location.href = './index.html';" id="home" class="float-left submit-button" >Home</button>
-        
-        <script>
-            const sdk = Descope({ projectId: projectId, persistTokens: true, autoRefresh: true });
-            let notValidToken = true
-            const sessionToken = sdk.getSessionToken()
-            if (sessionToken) {
-                notValidToken = sdk.isJwtExpired(sessionToken)
-                console.log(notValidToken)
-            } else {
-                notValidToken = false
-            }
-            if (!sessionToken || notValidToken) {
-                var container = document.getElementById('container');
-                container.innerHTML = '<descope-wc project-id="' + projectId+ '" flow-id="sign-up-or-in"></descope-wc>';
-                const wcElement = document.getElementsByTagName('descope-wc')[0];
-                const onSuccess = (e) => {
-                    console.log(e.detail.user),
-                    sdk.refresh(),
-                    window.location.replace("./loggedIn.html")
-                };
-                const onError = (err) => console.log(err);
+  <br>
 
-                wcElement.addEventListener('success', onSuccess);
-                wcElement.addEventListener('error', onError);
-            }
-            else if (!notValidToken) {
-                window.location.replace("./loggedIn.html")
-            }
-        </script>
-    </body>
+  <button onclick="location.href = './index.html';" id="home" class="float-left submit-button">Home</button>
+</body>
 </html>

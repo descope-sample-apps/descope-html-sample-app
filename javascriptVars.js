@@ -1,1 +1,1 @@
-var projectId = "";
+var projectId = "<your-project-id>";
